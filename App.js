@@ -5,6 +5,7 @@ import { Constants } from "expo"
 import Decks from "./components/Decks"
 import { primary } from "./utils/colors"
 import Deck from "./components/Deck"
+import Quiz from "./components/Quiz"
 
 const AppStatusBar = ({ backgroundColor, ...props }) => (
   <View style={{ backgroundColor, height: Constants.statusBarHeight }}>
@@ -19,7 +20,7 @@ AppStatusBar.propTypes = {
 const App = () => (
   <View style={{ flex: 1 }}>
     <AppStatusBar backgroundColor={primary} barStyle="light-content" />
-    <Deck />
+    <Quiz />
   </View>
 )
 
