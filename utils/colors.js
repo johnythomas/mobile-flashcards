@@ -1,0 +1,6 @@
+export const primary = "#4F6D7A"
+export const lightGray = "#AAA"
+export const gray = "#757575"
+export const white = "#fff"
+export const lightText = "#797979"
+export const darkText = "#343434"
