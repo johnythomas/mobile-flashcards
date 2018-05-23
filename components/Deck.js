@@ -1,4 +1,5 @@
 import React from "react"
+import PropTypes from "prop-types"
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native"
 import { primary, white, black } from "../utils/colors"
 
@@ -39,21 +40,38 @@ const styles = StyleSheet.create({
   }
 })
 
-const Deck = () => (
+const Deck = ({ navigation }) => (
   <View style={styles.container}>
     <View style={styles.deckDetails}>
-      <Text style={styles.deckName}>UdaciDeck</Text>
+      <Text style={styles.deckName}>{navigation.state.params.deckName}</Text>
       <Text style={styles.deckCards}>{`10 Cards`}</Text>
     </View>
     <View style={styles.deckActions}>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate("NewCard")}
+      >
         <Text>Add Card</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={[styles.button, styles.startBtn]}>
+      <TouchableOpacity
+        style={[styles.button, styles.startBtn]}
+        onPress={() => navigation.navigate("Quiz")}
+      >
         <Text style={{ color: white }}>Start Quiz</Text>
       </TouchableOpacity>
     </View>
   </View>
 )
+
+Deck.propTypes = {
+  navigation: PropTypes.shape({
+    state: PropTypes.shape({
+      params: PropTypes.shape({
+        deckName: PropTypes.string.isRequired
+      }).isRequired
+    }).isRequired,
+    navigate: PropTypes.func.isRequired
+  }).isRequired
+}
 
 export default Deck

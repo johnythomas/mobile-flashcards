@@ -2,10 +2,12 @@ import React from "react"
 import PropTypes from "prop-types"
 import { View, StatusBar } from "react-native"
 import { Constants } from "expo"
-import { createMaterialTopTabNavigator } from "react-navigation"
-import { Ionicons } from "@expo/vector-icons"
+import {
+  createMaterialTopTabNavigator,
+  createStackNavigator
+} from "react-navigation"
 import Decks from "./components/Decks"
-import { primary, black, white, lightText } from "./utils/colors"
+import { black, white, lightText, darkText } from "./utils/colors"
 import Deck from "./components/Deck"
 import Quiz from "./components/Quiz"
 import NewDeck from "./components/NewDeck"
@@ -21,7 +23,7 @@ AppStatusBar.propTypes = {
   backgroundColor: PropTypes.string.isRequired
 }
 
-const Navigation = createMaterialTopTabNavigator(
+const Tabs = createMaterialTopTabNavigator(
   {
     Decks: {
       screen: Decks
@@ -56,10 +58,39 @@ const Navigation = createMaterialTopTabNavigator(
   }
 )
 
+const MainNavigator = createStackNavigator({
+  Home: {
+    screen: Tabs,
+    headerMode: "none",
+    header: null,
+    navigationOptions: {
+      header: null
+    }
+  },
+  Deck: {
+    screen: Deck,
+    navigationOptions: {
+      title: "Deck"
+    }
+  },
+  Quiz: {
+    screen: Quiz,
+    navigationOptions: {
+      title: "Quiz"
+    }
+  },
+  NewCard: {
+    screen: NewCard,
+    navigationOptions: {
+      title: "Add Card"
+    }
+  }
+})
+
 const App = () => (
   <View style={{ flex: 1 }}>
     <AppStatusBar backgroundColor={black} barStyle="light-content" />
-    <Navigation />
+    <MainNavigator />
   </View>
 )
 

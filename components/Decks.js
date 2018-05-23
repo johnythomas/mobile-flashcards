@@ -1,4 +1,5 @@
 import React from "react"
+import PropTypes from "prop-types"
 import {
   View,
   Text,
@@ -57,12 +58,18 @@ const decks = [
   }
 ]
 
-const Decks = () => (
+const Decks = ({ navigation }) => (
   <View style={styles.container}>
     <FlatList
       data={decks}
       renderItem={({ item }) => (
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("Deck", {
+              deckName: item.deckName
+            })
+          }
+        >
           <View style={styles.deck}>
             <Text style={styles.deckName}>{item.deckName}</Text>
             <Text style={styles.deckCards}>{`${item.cards} Cards`}</Text>
@@ -73,5 +80,11 @@ const Decks = () => (
     />
   </View>
 )
+
+Decks.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired
+  }).isRequired
+}
 
 export default Decks
