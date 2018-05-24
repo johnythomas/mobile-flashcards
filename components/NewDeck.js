@@ -1,4 +1,6 @@
 import React, { Component } from "react"
+import { connect } from "react-redux"
+import PropTypes from "prop-types"
 import {
   View,
   Text,
@@ -7,6 +9,8 @@ import {
   TextInput
 } from "react-native"
 import { primary, white, darkText, lightText, black } from "../utils/colors"
+import { addDeck } from "../actions"
+import { storeDeck } from "../utils/api"
 
 const styles = StyleSheet.create({
   container: {
@@ -58,6 +62,18 @@ class NewDeck extends Component {
     }))
   }
 
+  handleSubmit = () => {
+    const deck = {
+      title: this.state.deckName,
+      questions: []
+    }
+    this.props.storeDeck(deck)
+    storeDeck(deck)
+    this.setState(() => ({
+      deckName: ""
+    }))
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -71,11 +87,12 @@ class NewDeck extends Component {
             underlineColorAndroid="transparent"
             placeholder="Deck Title"
             placeholderTextColor={lightText}
+            value={this.state.deckName}
             onChangeText={deckName => this.setState(() => ({ deckName }))}
           />
         </View>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={this.handleSubmit}>
             <Text style={{ color: white }}>Submit</Text>
           </TouchableOpacity>
         </View>
@@ -84,4 +101,8 @@ class NewDeck extends Component {
   }
 }
 
-export default NewDeck
+NewDeck.propTypes = {
+  storeDeck: PropTypes.func.isRequired
+}
+
+export default connect(null, { storeDeck: addDeck })(NewDeck)
