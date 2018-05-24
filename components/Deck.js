@@ -1,5 +1,6 @@
 import React from "react"
 import PropTypes from "prop-types"
+import { connect } from "react-redux"
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native"
 import { primary, white, black } from "../utils/colors"
 
@@ -40,11 +41,11 @@ const styles = StyleSheet.create({
   }
 })
 
-const Deck = ({ navigation }) => (
+const Deck = ({ title, cardCount, navigation }) => (
   <View style={styles.container}>
     <View style={styles.deckDetails}>
-      <Text style={styles.deckName}>{navigation.state.params.deckName}</Text>
-      <Text style={styles.deckCards}>{`10 Cards`}</Text>
+      <Text style={styles.deckName}>{title}</Text>
+      <Text style={styles.deckCards}>{`${cardCount} Cards`}</Text>
     </View>
     <View style={styles.deckActions}>
       <TouchableOpacity
@@ -65,13 +66,18 @@ const Deck = ({ navigation }) => (
 
 Deck.propTypes = {
   navigation: PropTypes.shape({
-    state: PropTypes.shape({
-      params: PropTypes.shape({
-        deckName: PropTypes.string.isRequired
-      }).isRequired
-    }).isRequired,
     navigate: PropTypes.func.isRequired
-  }).isRequired
+  }).isRequired,
+  title: PropTypes.string.isRequired,
+  cardCount: PropTypes.number.isRequired
 }
 
-export default Deck
+const mapStateToProps = (decks, { navigation }) => {
+  const deck = navigation.state.params.deckName
+  return {
+    title: deck,
+    cardCount: decks[deck].questions.length
+  }
+}
+
+export default connect(mapStateToProps)(Deck)
