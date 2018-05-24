@@ -1,0 +1,12 @@
+import { RECEIVE_DECKS } from "../actions"
+
+const decks = (state = {}, action) => {
+  switch (action.type) {
+    case RECEIVE_DECKS:
+      return action.decks
+    default:
+      return state
+  }
+}
+
+export default decks

@@ -1,5 +1,7 @@
 import React from "react"
 import PropTypes from "prop-types"
+import { createStore } from "redux"
+import { Provider } from "react-redux"
 import { View, StatusBar } from "react-native"
 import { Constants } from "expo"
 import {
@@ -7,11 +9,12 @@ import {
   createStackNavigator
 } from "react-navigation"
 import Decks from "./components/Decks"
-import { black, white, lightText, darkText } from "./utils/colors"
+import { black, white, lightText } from "./utils/colors"
 import Deck from "./components/Deck"
 import Quiz from "./components/Quiz"
 import NewDeck from "./components/NewDeck"
 import NewCard from "./components/NewCard"
+import reducers from "./reducers"
 
 const AppStatusBar = ({ backgroundColor, ...props }) => (
   <View style={{ backgroundColor, height: Constants.statusBarHeight }}>
@@ -87,11 +90,15 @@ const MainNavigator = createStackNavigator({
   }
 })
 
+const store = createStore(reducers)
+
 const App = () => (
-  <View style={{ flex: 1 }}>
-    <AppStatusBar backgroundColor={black} barStyle="light-content" />
-    <MainNavigator />
-  </View>
+  <Provider store={store}>
+    <View style={{ flex: 1 }}>
+      <AppStatusBar backgroundColor={black} barStyle="light-content" />
+      <MainNavigator />
+    </View>
+  </Provider>
 )
 
 export default App

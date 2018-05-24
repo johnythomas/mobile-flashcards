@@ -1,5 +1,6 @@
-import React from "react"
+import React, { Component } from "react"
 import PropTypes from "prop-types"
+import { connect } from "react-redux"
 import {
   View,
   Text,
@@ -7,7 +8,10 @@ import {
   FlatList,
   StyleSheet
 } from "react-native"
+import { AppLoading } from "expo"
 import { primary, white, darkText, lightText } from "../utils/colors"
+import { receiveDecks } from "../actions"
+import { getDecks } from "../utils/api"
 
 const styles = StyleSheet.create({
   container: {
@@ -35,56 +39,71 @@ const styles = StyleSheet.create({
   }
 })
 
-const decks = [
-  {
-    deckName: "UdaciDeck",
-    cards: 2
-  },
-  {
-    deckName: "Chemistry",
-    cards: 1
-  },
-  {
-    deckName: "Maths",
-    cards: 5
-  },
-  {
-    deckName: "Computer Science",
-    cards: 12
-  },
-  {
-    deckName: "Physics",
-    cards: 10
+class Decks extends Component {
+  state = {
+    ready: false
   }
-]
 
-const Decks = ({ navigation }) => (
-  <View style={styles.container}>
-    <FlatList
-      data={decks}
-      renderItem={({ item }) => (
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate("Deck", {
-              deckName: item.deckName
-            })
-          }
-        >
-          <View style={styles.deck}>
-            <Text style={styles.deckName}>{item.deckName}</Text>
-            <Text style={styles.deckCards}>{`${item.cards} Cards`}</Text>
-          </View>
-        </TouchableOpacity>
-      )}
-      keyExtractor={item => item.deckName}
-    />
-  </View>
-)
+  componentDidMount() {
+    getDecks()
+      .then(this.props.getDecks)
+      .then(() =>
+        this.setState(() => ({
+          ready: true
+        }))
+      )
+  }
+
+  render() {
+    const { navigation, decks } = this.props
+    if (!this.state.ready) {
+      return <AppLoading />
+    }
+    return (
+      <View style={styles.container}>
+        <FlatList
+          data={decks}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("Deck", {
+                  deckName: item.title
+                })
+              }
+            >
+              <View style={styles.deck}>
+                <Text style={styles.deckName}>{item.title}</Text>
+                <Text style={styles.deckCards}>{`${
+                  item.cardCount
+                } Cards`}</Text>
+              </View>
+            </TouchableOpacity>
+          )}
+          keyExtractor={item => item.title}
+        />
+      </View>
+    )
+  }
+}
 
 Decks.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired
-  }).isRequired
+  }).isRequired,
+  getDecks: PropTypes.func.isRequired,
+  decks: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      cardCount: PropTypes.number.isRequired
+    })
+  ).isRequired
 }
 
-export default Decks
+const mapStateToProps = decks => ({
+  decks: Object.values(decks).map(deck => ({
+    title: deck.title,
+    cardCount: deck.questions.length
+  }))
+})
+
+export default connect(mapStateToProps, { getDecks: receiveDecks })(Decks)
