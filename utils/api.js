@@ -1,5 +1,6 @@
 import { AsyncStorage } from "react-native"
-import { FLASHCARDS_STORAGE_KEY } from "./_flashcards"
+
+export const FLASHCARDS_STORAGE_KEY = "MobileFlashcards:decks"
 
 const setDummyData = () => {
   const dummyData = {
