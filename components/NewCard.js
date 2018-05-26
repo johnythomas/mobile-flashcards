@@ -72,7 +72,7 @@ class NewCard extends Component {
     addCardToDeck(this.props.title, card)
     this.props.saveCard(this.props.title, card)
 
-    // TODO: navigate back to the deck screen
+    this.props.navigation.pop()
   }
 
   render() {
@@ -112,7 +112,7 @@ NewCard.propTypes = {
   title: PropTypes.string.isRequired,
   saveCard: PropTypes.func.isRequired,
   navigation: PropTypes.shape({
-    navigate: PropTypes.func.isRequired
+    pop: PropTypes.func.isRequired
   }).isRequired
 }
 
