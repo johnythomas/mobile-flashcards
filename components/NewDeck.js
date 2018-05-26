@@ -6,7 +6,8 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  TextInput
+  TextInput,
+  ToastAndroid
 } from "react-native"
 import { primary, white, darkText, lightText, black } from "../utils/colors"
 import { addDeck } from "../actions"
@@ -74,6 +75,7 @@ class NewDeck extends Component {
       deckName: ""
     }))
     navigation.navigate("Decks")
+    ToastAndroid.show("Deck Added", ToastAndroid.SHORT)
   }
 
   render() {

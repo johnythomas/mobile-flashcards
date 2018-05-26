@@ -60,7 +60,7 @@ const Deck = ({ title, cardCount, navigation }) => (
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.button, styles.startBtn]}
-        onPress={() => navigation.navigate("Quiz")}
+        onPress={() => navigation.navigate("Quiz", { title })}
       >
         <Text style={{ color: white }}>Start Quiz</Text>
       </TouchableOpacity>

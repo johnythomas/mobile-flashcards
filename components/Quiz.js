@@ -1,4 +1,6 @@
 import React, { Component } from "react"
+import PropTypes from "prop-types"
+import { connect } from "react-redux"
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native"
 import { primary, white, darkText } from "../utils/colors"
 
@@ -44,7 +46,9 @@ const styles = StyleSheet.create({
 
 class Quiz extends Component {
   state = {
-    flipped: false
+    flipped: false,
+    score: 0,
+    index: 0
   }
 
   toggleFlip = () => {
@@ -53,16 +57,45 @@ class Quiz extends Component {
     }))
   }
 
+  handleAnswer = isCorrect => {
+    this.setState(currentState => {
+      const score = isCorrect ? currentState.score + 1 : currentState.score
+      return {
+        score,
+        index: currentState.index + 1,
+        flipped: false
+      }
+    })
+  }
+
   render() {
+    const { deck } = this.props
+    const { index, score } = this.state
+
+    if (index >= deck.questions.length) {
+      return (
+        <View style={styles.container}>
+          <View style={styles.questionContainer}>
+            <Text style={styles.question}>Score</Text>
+            <Text style={styles.question}>{`${score}/${
+              deck.questions.length
+            }`}</Text>
+          </View>
+        </View>
+      )
+    }
+
     return (
       <View style={styles.container}>
-        <Text style={{ fontSize: 20, color: white }}>1/2</Text>
+        <Text style={{ fontSize: 20, color: white }}>{`${index + 1}/${
+          deck.questions.length
+        }`}</Text>
 
         <View style={styles.questionContainer}>
           <Text style={styles.question}>
             {this.state.flipped
-              ? "Yes"
-              : "Does React Native works with Android?"}
+              ? deck.questions[index].answer
+              : deck.questions[index].question}
           </Text>
           <TouchableOpacity onPress={this.toggleFlip}>
             <Text style={styles.answerBtnText}>
@@ -71,10 +104,16 @@ class Quiz extends Component {
           </TouchableOpacity>
         </View>
         <View style={styles.questionActions}>
-          <TouchableOpacity style={[styles.button, styles.correctBtn]}>
+          <TouchableOpacity
+            style={[styles.button, styles.correctBtn]}
+            onPress={() => this.handleAnswer(true)}
+          >
             <Text style={{ color: white }}>Correct</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.button, styles.incorrectBtn]}>
+          <TouchableOpacity
+            style={[styles.button, styles.incorrectBtn]}
+            onPress={() => this.handleAnswer(false)}
+          >
             <Text style={{ color: white }}>Incorrect</Text>
           </TouchableOpacity>
         </View>
@@ -83,4 +122,20 @@ class Quiz extends Component {
   }
 }
 
-export default Quiz
+Quiz.propTypes = {
+  deck: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    questions: PropTypes.arrayOf(
+      PropTypes.shape({
+        question: PropTypes.string.isRequired,
+        answer: PropTypes.string.isRequired
+      }).isRequired
+    ).isRequired
+  }).isRequired
+}
+
+const mapStateToProps = (decks, { navigation }) => ({
+  deck: decks[navigation.state.params.title]
+})
+
+export default connect(mapStateToProps)(Quiz)

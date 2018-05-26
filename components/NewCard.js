@@ -6,7 +6,8 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  TextInput
+  TextInput,
+  ToastAndroid
 } from "react-native"
 import { primary, white, darkText, lightText, black } from "../utils/colors"
 import { addCardToDeck } from "../utils/api"
@@ -73,6 +74,7 @@ class NewCard extends Component {
     this.props.saveCard(this.props.title, card)
 
     this.props.navigation.pop()
+    ToastAndroid.show("New Card Added", ToastAndroid.SHORT)
   }
 
   render() {
