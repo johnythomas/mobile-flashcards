@@ -1,4 +1,6 @@
 import React, { Component } from "react"
+import PropTypes from "prop-types"
+import { connect } from "react-redux"
 import {
   View,
   Text,
@@ -7,6 +9,8 @@ import {
   TextInput
 } from "react-native"
 import { primary, white, darkText, lightText, black } from "../utils/colors"
+import { addCardToDeck } from "../utils/api"
+import { saveCardToDeck } from "../actions"
 
 const styles = StyleSheet.create({
   container: {
@@ -47,7 +51,7 @@ const styles = StyleSheet.create({
   }
 })
 
-class NewDeck extends Component {
+class NewCard extends Component {
   state = {
     question: "",
     answer: ""
@@ -59,11 +63,24 @@ class NewDeck extends Component {
     }))
   }
 
+  handleSubmit = () => {
+    const { question, answer } = this.state
+    const card = {
+      question,
+      answer
+    }
+    addCardToDeck(this.props.title, card)
+    this.props.saveCard(this.props.title, card)
+
+    // TODO: navigate back to the deck screen
+  }
+
   render() {
+    const { title } = this.props
     return (
       <View style={styles.container}>
         <View style={styles.questionContainer}>
-          <Text style={styles.heading}>Udaci Deck</Text>
+          <Text style={styles.heading}>{title}</Text>
 
           <TextInput
             style={styles.input}
@@ -82,7 +99,7 @@ class NewDeck extends Component {
           />
         </View>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={this.handleSubmit}>
             <Text style={{ color: white }}>Submit</Text>
           </TouchableOpacity>
         </View>
@@ -91,4 +108,16 @@ class NewDeck extends Component {
   }
 }
 
-export default NewDeck
+NewCard.propTypes = {
+  title: PropTypes.string.isRequired,
+  saveCard: PropTypes.func.isRequired,
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired
+  }).isRequired
+}
+
+const mapStateToProps = (decks, { navigation }) => ({
+  title: navigation.state.params.title
+})
+
+export default connect(mapStateToProps, { saveCard: saveCardToDeck })(NewCard)

@@ -37,10 +37,25 @@ export const getDecks = () =>
     results => (results ? JSON.parse(results) : setDummyData())
   )
 
-export const storeDeck = deck =>
+export const saveDeckTitle = deck =>
   AsyncStorage.mergeItem(
     FLASHCARDS_STORAGE_KEY,
     JSON.stringify({
       [deck.title]: deck
     })
   )
+
+export const addCardToDeck = (title, card) =>
+  getDecks().then(decks => {
+    const updatedDecks = {
+      ...decks,
+      [title]: {
+        ...decks[title],
+        questions: decks[title].questions.concat([card])
+      }
+    }
+    return AsyncStorage.setItem(
+      FLASHCARDS_STORAGE_KEY,
+      JSON.stringify(updatedDecks)
+    )
+  })

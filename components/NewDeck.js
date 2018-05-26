@@ -10,7 +10,7 @@ import {
 } from "react-native"
 import { primary, white, darkText, lightText, black } from "../utils/colors"
 import { addDeck } from "../actions"
-import { storeDeck } from "../utils/api"
+import { saveDeckTitle } from "../utils/api"
 
 const styles = StyleSheet.create({
   container: {
@@ -63,15 +63,17 @@ class NewDeck extends Component {
   }
 
   handleSubmit = () => {
+    const { storeDeck, navigation } = this.props
     const deck = {
       title: this.state.deckName,
       questions: []
     }
-    this.props.storeDeck(deck)
     storeDeck(deck)
+    saveDeckTitle(deck)
     this.setState(() => ({
       deckName: ""
     }))
+    navigation.navigate("Decks")
   }
 
   render() {
@@ -102,7 +104,10 @@ class NewDeck extends Component {
 }
 
 NewDeck.propTypes = {
-  storeDeck: PropTypes.func.isRequired
+  storeDeck: PropTypes.func.isRequired,
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired
+  }).isRequired
 }
 
 export default connect(null, { storeDeck: addDeck })(NewDeck)

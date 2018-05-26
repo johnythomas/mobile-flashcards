@@ -50,7 +50,11 @@ const Deck = ({ title, cardCount, navigation }) => (
     <View style={styles.deckActions}>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("NewCard")}
+        onPress={() =>
+          navigation.navigate("NewCard", {
+            title
+          })
+        }
       >
         <Text>Add Card</Text>
       </TouchableOpacity>
