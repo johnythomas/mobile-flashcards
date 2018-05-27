@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native"
-import { primary, white, darkText } from "../utils/colors"
+import { primary, white, darkText, black } from "../utils/colors"
 import { clearLocalNotification, setLocalNotification } from "../utils/helpers"
 
 const styles = StyleSheet.create({
@@ -73,6 +73,18 @@ class Quiz extends Component {
     })
   }
 
+  resetState = () => {
+    this.setState(() => ({
+      flipped: false,
+      score: 0,
+      index: 0
+    }))
+  }
+
+  goBack = () => {
+    this.props.navigation.pop()
+  }
+
   render() {
     const { deck } = this.props
     const { index, score } = this.state
@@ -85,6 +97,20 @@ class Quiz extends Component {
             <Text style={styles.question}>{`${score}/${
               deck.questions.length
             }`}</Text>
+          </View>
+          <View style={styles.questionActions}>
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: black }]}
+              onPress={this.resetState}
+            >
+              <Text style={{ color: white }}>Restart Quiz</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: black, marginTop: 20 }]}
+              onPress={this.goBack}
+            >
+              <Text style={{ color: white }}>Back To Deck</Text>
+            </TouchableOpacity>
           </View>
         </View>
       )
@@ -136,6 +162,9 @@ Quiz.propTypes = {
         answer: PropTypes.string.isRequired
       }).isRequired
     ).isRequired
+  }).isRequired,
+  navigation: PropTypes.shape({
+    pop: PropTypes.func.isRequired
   }).isRequired
 }
 
