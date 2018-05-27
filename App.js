@@ -1,4 +1,4 @@
-import React from "react"
+import React, { Component } from "react"
 import PropTypes from "prop-types"
 import { createStore } from "redux"
 import { Provider } from "react-redux"
@@ -15,6 +15,7 @@ import Quiz from "./components/Quiz"
 import NewDeck from "./components/NewDeck"
 import NewCard from "./components/NewCard"
 import reducers from "./reducers"
+import { setLocalNotification } from "./utils/helpers"
 
 const AppStatusBar = ({ backgroundColor, ...props }) => (
   <View style={{ backgroundColor, height: Constants.statusBarHeight }}>
@@ -92,13 +93,21 @@ const MainNavigator = createStackNavigator({
 
 const store = createStore(reducers)
 
-const App = () => (
-  <Provider store={store}>
-    <View style={{ flex: 1 }}>
-      <AppStatusBar backgroundColor={black} barStyle="light-content" />
-      <MainNavigator />
-    </View>
-  </Provider>
-)
+class App extends Component {
+  componentDidMount() {
+    setLocalNotification()
+  }
+
+  render() {
+    return (
+      <Provider store={store}>
+        <View style={{ flex: 1 }}>
+          <AppStatusBar backgroundColor={black} barStyle="light-content" />
+          <MainNavigator />
+        </View>
+      </Provider>
+    )
+  }
+}
 
 export default App

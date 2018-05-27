@@ -3,6 +3,7 @@ import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native"
 import { primary, white, darkText } from "../utils/colors"
+import { clearLocalNotification, setLocalNotification } from "../utils/helpers"
 
 const styles = StyleSheet.create({
   container: {
@@ -58,6 +59,10 @@ class Quiz extends Component {
   }
 
   handleAnswer = isCorrect => {
+    if (this.state.index === this.props.deck.questions.length - 1) {
+      clearLocalNotification().then(setLocalNotification)
+    }
+
     this.setState(currentState => {
       const score = isCorrect ? currentState.score + 1 : currentState.score
       return {
