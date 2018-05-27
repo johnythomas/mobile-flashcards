@@ -6,7 +6,8 @@ import {
   Text,
   TouchableOpacity,
   FlatList,
-  StyleSheet
+  StyleSheet,
+  Animated
 } from "react-native"
 import { AppLoading } from "expo"
 import { primary, white, darkText, lightText } from "../utils/colors"
@@ -41,7 +42,8 @@ const styles = StyleSheet.create({
 
 class Decks extends Component {
   state = {
-    ready: false
+    ready: false,
+    translateValue: new Animated.Value(-100)
   }
 
   componentDidMount() {
@@ -54,23 +56,40 @@ class Decks extends Component {
       )
   }
 
+  componentWillUpdate() {
+    Animated.timing(this.state.translateValue, {
+      toValue: 0,
+      duration: 300
+    }).start()
+  }
+
+  handleDeckClick = title => {
+    Animated.timing(this.state.translateValue, {
+      toValue: 100,
+      duration: 300
+    }).start()
+
+    this.props.navigation.navigate("Deck", {
+      deckName: title
+    })
+  }
+
   render() {
-    const { navigation, decks } = this.props
+    const { decks } = this.props
     if (!this.state.ready) {
       return <AppLoading />
     }
     return (
-      <View style={styles.container}>
+      <Animated.View
+        style={[
+          styles.container,
+          { transform: [{ translateY: this.state.translateValue }] }
+        ]}
+      >
         <FlatList
           data={decks}
           renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("Deck", {
-                  deckName: item.title
-                })
-              }
-            >
+            <TouchableOpacity onPress={() => this.handleDeckClick(item.title)}>
               <View style={styles.deck}>
                 <Text style={styles.deckName}>{item.title}</Text>
                 <Text style={styles.deckCards}>{`${
@@ -81,7 +100,7 @@ class Decks extends Component {
           )}
           keyExtractor={item => item.title}
         />
-      </View>
+      </Animated.View>
     )
   }
 }
