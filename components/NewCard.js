@@ -66,6 +66,9 @@ class NewCard extends Component {
 
   handleSubmit = () => {
     const { question, answer } = this.state
+
+    if (!question || !answer) return
+
     const card = {
       question,
       answer

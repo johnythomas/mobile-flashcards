@@ -64,9 +64,13 @@ class NewDeck extends Component {
   }
 
   handleSubmit = () => {
+    const { deckName } = this.state
+
+    if (!deckName) return
+
     const { storeDeck, navigation } = this.props
     const deck = {
-      title: this.state.deckName,
+      title: deckName,
       questions: []
     }
     storeDeck(deck)
