@@ -56,3 +56,7 @@ Project was tested only on an Android phone and on Genymotion
 ## Create React App
 
 This project was bootstrapped with [Create React Native App](https://github.com/react-community/create-react-native-app). You can find more information on how to perform common tasks [here](https://github.com/react-community/create-react-native-app/blob/master/react-native-scripts/template/README.md).
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
