@@ -78,7 +78,10 @@ class NewDeck extends Component {
     this.setState(() => ({
       deckName: ""
     }))
-    navigation.navigate("Decks")
+
+    navigation.navigate("Deck", {
+      deckName
+    })
     ToastAndroid.show("Deck Added", ToastAndroid.SHORT)
   }
 
